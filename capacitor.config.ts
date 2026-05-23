@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'com.soup.tip-tracker',
+  appId: 'com.soup.tipTally',
   appName: 'Tip Tracker',
   webDir: 'out',
   plugins: {

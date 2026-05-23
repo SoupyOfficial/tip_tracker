@@ -1,0 +1,18 @@
+default_platform(:ios)
+
+platform :ios do
+  lane :test_auth do
+    api_key = {
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8")
+    }
+
+    app_store_connect_api_key(api_key)
+
+    # Try to list apps to verify auth works
+    apps = Spaceship::ConnectAPI::App.all
+    puts "Found #{apps.count} apps"
+    apps.each { |a| puts "  #{a.name} (#{a.bundle_id})" }
+  end
+end

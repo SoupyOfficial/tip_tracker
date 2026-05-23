@@ -1,3 +1,16 @@
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Apple credentials
+ios/App/api_key.json
+ios/App/*.p8
+*.cer
+*.p12
+*.mobileprovision
+*.provisionprofile
+
 # Next.js
 .next/
 out/

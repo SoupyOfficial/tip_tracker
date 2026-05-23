@@ -1,24 +1,113 @@
 default_platform(:ios)
 
+ENV["LC_ALL"] = "en_US.UTF-8"
+ENV["LANG"] = "en_US.UTF-8"
+
 platform :ios do
+  desc "Test API key auth"
+  lane :test_auth do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
+    )
+
+    apps = Spaceship::ConnectAPI::App.all
+    puts "Found #{apps.count} apps"
+    apps.each { |a| puts "  #{a.name} (#{a.bundle_id})" }
+  end
+
+  desc "Create distribution certificate"
+  lane :create_dist_cert do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
+    )
+
+    cert(
+      team_id: ENV["APPLE_TEAM_ID"],
+      api_key: api_key,
+      development: false
+    )
+  end
+
+  desc "Generate development provisioning profile"
+  lane :generate_dev_profile do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
+    )
+
+    sigh(
+      app_identifier: "com.soup.tipTally",
+      team_id: ENV["APPLE_TEAM_ID"],
+      skip_certificate_verification: true,
+      force: true,
+      development: true,
+      api_key: api_key
+    )
+  end
+
+  desc "Generate provisioning profile using sigh"
+  lane :generate_profile do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
+    )
+
+    sigh(
+      app_identifier: "com.soup.tipTally",
+      team_id: ENV["APPLE_TEAM_ID"],
+      skip_certificate_verification: true,
+      force: true,
+      api_key: api_key
+    )
+  end
+
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    update_code_signing_settings(
-      path: "App.xcodeproj",
-      team_id: "S2N2F8M94P",
-      use_automatic_signing: true
+    # Authenticate with App Store Connect API key (for upload only)
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.private_keys/AuthKey_#{ENV['APPLE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
     )
+
+    # Clear bundler env vars so xcodebuild uses system Ruby, not Homebrew Ruby
+    ENV.delete("BUNDLE_GEMFILE")
+    ENV.delete("BUNDLE_BIN_PATH")
+    ENV.delete("RUBYLIB")
+
     build_app(
       project: "App.xcodeproj",
       scheme: "App",
       export_method: "app-store",
-      xcargs: "-allowProvisioningUpdates",
+      xcodebuild_formatter: "xcpretty",
+      xcargs: "-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID']}",
       export_options: {
-        teamID: "S2N2F8M94P",
+        teamID: ENV["APPLE_TEAM_ID"],
         manageAppVersionAndBuildNumber: true,
-        signingStyle: "automatic"
+        signingStyle: "automatic",
+        compileBitcode: false
       }
     )
-    upload_to_testflight
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting: false
+    )
   end
 end
