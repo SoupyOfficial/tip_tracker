@@ -1,12 +1,6 @@
 import { z } from "zod";
 
-const tourTypes = ["VIP", "Standard", "Corporate", "Mixed"] as const;
 const paymentMethods = ["Cash", "Credit Card", "Venmo", "Zelle", "PayPal"] as const;
-const locations = [
-  "Universal Studios Florida & Islands of Adventure",
-  "Epic Universe",
-  "All Parks",
-] as const;
 const tourPrivacy = ["private", "non-private"] as const;
 
 export const TipEntryFormSchema = z.object({
@@ -24,9 +18,9 @@ export const TipEntryFormSchema = z.object({
     })
     .min(0.01, { error: "Tip amount must be at least $0.01" }),
 
-  tourType: z.enum(tourTypes, {
-    error: "Please select a valid tour type",
-  }),
+  tourType: z.string({
+    error: "Tour type is required",
+  }).min(1, { error: "Tour type is required" }),
 
   guestCount: z
     .number({
@@ -61,9 +55,9 @@ export const TipEntryFormSchema = z.object({
     error: "Please select a valid payment method",
   }),
 
-  location: z.enum(locations, {
-    error: "Please select a valid location",
-  }).default("Universal Studios Florida & Islands of Adventure"),
+  location: z.string({
+    error: "Location is required",
+  }).min(1, { error: "Location is required" }).default("Universal Studios Florida & Islands of Adventure"),
 
   isPrivate: z.enum(tourPrivacy, {
     error: "Please select a valid tour privacy type",

@@ -1,8 +1,8 @@
-export type TourType = "VIP" | "Standard" | "Corporate" | "Mixed";
+export type TourType = string;
 export type Rating = 1 | 2 | 3 | 4 | 5;
 export type Currency = "USD";
 export type PaymentMethod = "Cash" | "Credit Card" | "Venmo" | "Zelle" | "PayPal";
-export type Location = "Universal Studios Florida & Islands of Adventure" | "Epic Universe" | "All Parks";
+export type Location = string;
 export type TourPrivacy = "private" | "non-private";
 
 export interface TipEntry {
