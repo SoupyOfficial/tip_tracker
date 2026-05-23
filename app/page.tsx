@@ -75,6 +75,35 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Privacy Summary */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
+          <div className="flex items-center gap-6">
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Private Tours</p>
+              <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+                ${analytics.privacyBreakdown.private.average.toFixed(2)} avg
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Non-Private Tours</p>
+              <p className="text-lg font-semibold text-amber-600 dark:text-amber-400">
+                ${analytics.privacyBreakdown["non-private"].average.toFixed(2)} avg
+              </p>
+            </div>
+          </div>
+          {(() => {
+            const diff = analytics.privacyBreakdown.private.average - analytics.privacyBreakdown["non-private"].average;
+            if (diff === 0) return null;
+            return (
+              <p className={`text-sm font-medium ${diff > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                Private tours earn ${Math.abs(diff).toFixed(2)} {diff > 0 ? "more" : "less"} on avg
+              </p>
+            );
+          })()}
+        </div>
+      </div>
+
       {/* Per Tour Type Summary Cards */}
       <div className="mb-6">
         <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
