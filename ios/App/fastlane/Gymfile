@@ -1,0 +1,4 @@
+export_options({
+  method: "app-store",
+  manageAppVersionAndBuildNumber: true,
+})

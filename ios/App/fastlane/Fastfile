@@ -1,0 +1,24 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    update_code_signing_settings(
+      path: "App.xcodeproj",
+      team_id: "S2N2F8M94P",
+      use_automatic_signing: true
+    )
+    build_app(
+      project: "App.xcodeproj",
+      scheme: "App",
+      export_method: "app-store",
+      xcargs: "-allowProvisioningUpdates",
+      export_options: {
+        teamID: "S2N2F8M94P",
+        manageAppVersionAndBuildNumber: true,
+        signingStyle: "automatic"
+      }
+    )
+    upload_to_testflight
+  end
+end

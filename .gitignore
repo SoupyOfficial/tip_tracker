@@ -1,0 +1,22 @@
+# Next.js
+.next/
+out/
+node_modules/
+
+# Capacitor
+ios/App/Pods/
+ios/App/App.xcworkspace/
+ios/App/App.xcodeproj/xcuserdata/
+
+# Fastlane
+ios/App/fastlane/report.xml
+ios/App/fastlane/Preview.html
+ios/App/fastlane/screenshots
+ios/App/fastlane/test_output
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
