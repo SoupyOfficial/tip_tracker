@@ -4,14 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { TipEntryFormSchema } from "@/lib/validations";
 import type { TipEntryFormValues } from "@/lib/validations";
 import type { TipEntry, TourType, PaymentMethod, Location, TourPrivacy } from "@/lib/types";
+import { getCustomLocations, getCustomTourTypes, addCustomLocation, addCustomTourType } from "@/lib/settings";
 
-const tourTypes: TourType[] = ["VIP", "Standard", "Corporate", "Mixed"];
 const paymentMethods: PaymentMethod[] = ["Cash", "Credit Card", "Venmo", "Zelle", "PayPal"];
-const locations: Location[] = [
-  "Universal Studios Florida & Islands of Adventure",
-  "Epic Universe",
-  "All Parks",
-];
 
 const STORAGE_KEY_LAST_TOUR = "tip_tracker_last_tour";
 const STORAGE_KEY_LAST_LOCATION = "tip_tracker_last_location";
@@ -62,6 +57,14 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
     initialData?.isPrivate ?? "private"
   );
 
+  const [tourTypes, setTourTypes] = useState<string[]>(getCustomTourTypes);
+  const [locations, setLocations] = useState<string[]>(getCustomLocations);
+
+  useEffect(() => {
+    setTourTypes(getCustomTourTypes());
+    setLocations(getCustomLocations());
+  }, []);
+
   useEffect(() => {
     if (!isEdit && typeof window !== "undefined") {
       try {
@@ -77,6 +80,24 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
     setGeneralError(null);
     setFieldErrors({});
   }, []);
+
+  const handleAddCustomTourType = () => {
+    const name = prompt("Enter new tour type:");
+    if (!name) return;
+    addCustomTourType(name);
+    const updated = getCustomTourTypes();
+    setTourTypes(updated);
+    setTourType(name.trim());
+  };
+
+  const handleAddCustomLocation = () => {
+    const name = prompt("Enter new location:");
+    if (!name) return;
+    addCustomLocation(name);
+    const updated = getCustomLocations();
+    setLocations(updated);
+    setLocation(name.trim());
+  };
 
   const buildFormData = useCallback((): Record<string, unknown> => {
     const data: Record<string, unknown> = {
@@ -219,6 +240,14 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   {type}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={handleAddCustomTourType}
+                className="rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                title="Add custom tour type"
+              >
+                +
+              </button>
             </div>
             {fieldErrors.tourType && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.tourType}</p>
@@ -335,6 +364,14 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   {type}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={handleAddCustomTourType}
+                className="rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                title="Add custom tour type"
+              >
+                +
+              </button>
             </div>
             {fieldErrors.tourType && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.tourType}</p>
@@ -412,18 +449,28 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
             <label htmlFor="location" className="mb-1 block text-sm font-medium text-gray-700">
               Location
             </label>
-            <select
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value as Location)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            >
-              {locations.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
-              ))}
-            </select>
+            <div className="flex gap-2">
+              <select
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value as Location)}
+                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              >
+                {locations.map((loc) => (
+                  <option key={loc} value={loc}>
+                    {loc}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={handleAddCustomLocation}
+                className="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 transition-colors"
+                title="Add custom location"
+              >
+                +
+              </button>
+            </div>
             {fieldErrors.location && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.location}</p>
             )}

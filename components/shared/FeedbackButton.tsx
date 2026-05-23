@@ -19,6 +19,8 @@ export default function FeedbackButton() {
   const [selectedCategory, setSelectedCategory] = useState<Category>('Suggestion')
   const [showPulse, setShowPulse] = useState(true)
 
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL?.trim() || ''
+
   useEffect(() => {
     const timer = setTimeout(() => setShowPulse(false), 8000)
     return () => clearTimeout(timer)
@@ -30,9 +32,14 @@ export default function FeedbackButton() {
       return
     }
 
+    if (!supportEmail) {
+      toast.error('Support email is not configured')
+      return
+    }
+
     const subject = encodeURIComponent(`Tip Tracker Feedback: ${selectedCategory}`)
     const body = encodeURIComponent(message.trim())
-    const mailtoUrl = `mailto:jscampbell21@outlook.com?subject=${subject}&body=${body}`
+    const mailtoUrl = `mailto:${supportEmail}?subject=${subject}&body=${body}`
 
     window.location.href = mailtoUrl
     toast.success('Feedback opened in Mail')

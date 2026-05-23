@@ -3,7 +3,7 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sun, Moon, Plus, List, BarChart3 } from 'lucide-react'
+import { Sun, Moon, Plus, List, Home, Settings } from 'lucide-react'
 
 interface AppShellProps {
   children: ReactNode
@@ -37,9 +37,10 @@ export default function AppShell({ children }: AppShellProps) {
   }
 
   const navItems = [
-    { href: '/', icon: Plus, label: 'Add' },
+    { href: '/', icon: Home, label: 'Home' },
+    { href: '/add', icon: Plus, label: 'Add' },
     { href: '/tips', icon: List, label: 'Tips' },
-    { href: '/insights', icon: BarChart3, label: 'Insights' },
+    { href: '/settings', icon: Settings, label: 'Settings' },
   ]
 
   return (
@@ -77,7 +78,7 @@ export default function AppShell({ children }: AppShellProps) {
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 safe-area-bottom">
         <div className="flex h-16 items-center justify-around">
           {navItems.map(({ href, icon: Icon, label }) => {
-            const isActive = pathname === href
+            const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
             return (
               <Link
                 key={href}

@@ -7,6 +7,7 @@ import {
   getAllTips,
   getAnalytics,
 } from '@/lib/db';
+import { parseTipJSON, parseTipCSV, importTips as dbImportTips } from '@/lib/import';
 import { TipEntryFormSchema } from '@/lib/validations';
 import type { TipEntry, TipFilters, AnalyticsSummary, Rating } from '@/lib/types';
 import type { TipEntryFormValues } from '@/lib/validations';
@@ -184,4 +185,47 @@ export function useExport() {
   };
 
   return { exportCSV, exportJSON };
+}
+
+export function useImportTips() {
+  const [loading, setLoading] = useState(false);
+
+  const importData = async (file: File): Promise<{ imported: number; skipped: number; errors: string[] }> => {
+    setLoading(true);
+    try {
+      const text = await file.text();
+      const ext = file.name.split('.').pop()?.toLowerCase();
+
+      let tips: TipEntry[];
+      if (ext === 'json') {
+        tips = parseTipJSON(text);
+      } else if (ext === 'csv') {
+        tips = parseTipCSV(text);
+      } else {
+        throw new Error(`Unsupported file type: ${ext}. Use .json or .csv`);
+      }
+
+      const result = await dbImportTips(tips);
+
+      if (result.imported > 0) {
+        toast.success('Import complete', {
+          description: `${result.imported} tips imported${result.skipped > 0 ? `, ${result.skipped} skipped` : ''}`,
+        });
+      } else {
+        toast.info('Nothing imported', {
+          description: result.errors.length > 0 ? result.errors.join('; ') : 'No valid tips found',
+        });
+      }
+
+      return result;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to import tips';
+      toast.error('Import failed', { description: message });
+      return { imported: 0, skipped: 0, errors: [message] };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { importData, loading };
 }
