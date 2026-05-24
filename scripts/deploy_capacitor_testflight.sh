@@ -12,14 +12,10 @@ set -e
 #   https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api
 # Then set the environment variables listed below.
 
-# ── Required environment variables ───────────────────────────
-: "${APPLE_API_KEY_ID:?Missing required env var: APPLE_API_KEY_ID}"
-: "${APPLE_API_ISSUER_ID:?Missing required env var: APPLE_API_ISSUER_ID}"
-: "${APPLE_TEAM_ID:?Missing required env var: APPLE_TEAM_ID}"
-
-API_KEY_ID="$APPLE_API_KEY_ID"
-API_ISSUER_ID="$APPLE_API_ISSUER_ID"
-TEAM_ID="$APPLE_TEAM_ID"
+# ── Required environment variables (with fallback defaults) ──
+API_KEY_ID="${APPLE_API_KEY_ID:-360B56CR7S6U}"
+API_ISSUER_ID="${APPLE_API_ISSUER_ID:-a9ee901f-b505-4465-90ec-d405cbf25d85}"
+TEAM_ID="${APPLE_TEAM_ID:-DGQ5P34GS9}"
 
 # Configuration
 PROJECT_DIR="/Volumes/Jacob-SSD/Projects/tip_tracker"
