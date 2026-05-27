@@ -42,7 +42,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
   const [date, setDate] = useState(initialData?.date ?? getTodayString());
   const [amount, setAmount] = useState(initialData?.amount?.toString() ?? "");
   const [tourType, setTourType] = useState<TourType>(
-    initialData?.tourType ?? getStoredDefault<TourType>(STORAGE_KEY_LAST_TOUR, "VIP")
+    initialData?.tourType ?? getStoredDefault<TourType>(STORAGE_KEY_LAST_TOUR, "Private")
   );
   const [guestCount, setGuestCount] = useState(initialData?.guestCount?.toString() ?? "1");
   const [rating, setRating] = useState(initialData?.rating?.toString() ?? "4");
@@ -51,7 +51,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
     initialData?.paymentMethod ?? "Cash"
   );
   const [location, setLocation] = useState<Location>(
-    initialData?.location ?? getStoredDefault<Location>(STORAGE_KEY_LAST_LOCATION, "Universal Studios Florida & Islands of Adventure")
+    initialData?.location ?? getStoredDefault<Location>(STORAGE_KEY_LAST_LOCATION, "Universal")
   );
   const [tourTypes, setTourTypes] = useState<string[]>(getCustomTourTypes);
   const [locations, setLocations] = useState<string[]>(getCustomLocations);
@@ -147,7 +147,16 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
     clearErrors();
     setSubmitting(true);
 
-    const formData = buildFormData();
+    const formData = {
+      date,
+      amount: parseFloat(amount),
+      tourType,
+      location,
+      guestCount: null,
+      rating: null,
+      paymentMethod: null,
+      notes: null,
+    };
     const result = TipEntryFormSchema.safeParse(formData);
 
     if (!result.success) {
@@ -246,6 +255,40 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
             </div>
             {fieldErrors.tourType && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.tourType}</p>
+            )}
+          </div>
+
+          {/* Location - pill buttons */}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Location
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {locations.map((loc) => (
+                <button
+                  key={loc}
+                  type="button"
+                  onClick={() => setLocation(loc)}
+                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    location === loc
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {loc}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddCustomLocation}
+                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                title="Add custom location"
+              >
+                +
+              </button>
+            </div>
+            {fieldErrors.location && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.location}</p>
             )}
           </div>
 

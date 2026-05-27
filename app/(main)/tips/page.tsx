@@ -10,7 +10,7 @@ export default function TipsPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto max-w-4xl px-4 pb-8">
         <h1 className="mb-6 text-2xl font-bold">All Tips</h1>
         <div className="flex items-center justify-center py-12">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
@@ -20,7 +20,7 @@ export default function TipsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-4 pb-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">All Tips</h1>
         <button
