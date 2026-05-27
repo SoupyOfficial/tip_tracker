@@ -13,7 +13,7 @@ set -e
 # Then set the environment variables listed below.
 
 # ── Required environment variables (with fallback defaults) ──
-API_KEY_ID="${APPLE_API_KEY_ID:-360B56CR7S6U}"
+API_KEY_ID="${APPLE_API_KEY_ID:-2G67S7XV8N}"
 API_ISSUER_ID="${APPLE_API_ISSUER_ID:-a9ee901f-b505-4465-90ec-d405cbf25d85}"
 TEAM_ID="${APPLE_TEAM_ID:-DGQ5P34GS9}"
 
@@ -118,7 +118,8 @@ xcrun altool --validate-app \
   -f "$IPA_PATH" \
   --type ios \
   --apiKey "$API_KEY_ID" \
-  --apiIssuer "$API_ISSUER_ID"
+  --apiIssuer "$API_ISSUER_ID" \
+  --apiKeyPath "$API_KEY_PATH"
 log "IPA validated"
 
 # Step 6: Upload to TestFlight
@@ -128,7 +129,14 @@ xcrun altool --upload-app \
   -f "$IPA_PATH" \
   --type ios \
   --apiKey "$API_KEY_ID" \
-  --apiIssuer "$API_ISSUER_ID"
+  --apiIssuer "$API_ISSUER_ID" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH" \
+  --apiKeyPath "$API_KEY_PATH"
 log "Uploaded to TestFlight!"
 
 echo ""

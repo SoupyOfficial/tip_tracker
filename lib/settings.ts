@@ -7,7 +7,7 @@ const DEFAULT_LOCATIONS = [
   "All Parks",
 ];
 
-const DEFAULT_TOUR_TYPES = ["VIP", "Standard", "Corporate", "Mixed"];
+const DEFAULT_TOUR_TYPES = ["Private", "Non-Private"];
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;

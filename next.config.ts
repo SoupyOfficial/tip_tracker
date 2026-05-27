@@ -8,6 +8,7 @@ if (!supportEmail) {
 }
 
 const nextConfig: NextConfig = {
+  output: 'export',
   env: {
     NEXT_PUBLIC_SUPPORT_EMAIL: supportEmail ?? '',
   },

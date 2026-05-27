@@ -62,7 +62,7 @@ export default function FeedbackButton() {
         className={`fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500 text-white shadow-lg transition-all hover:bg-indigo-600 active:scale-95 dark:bg-indigo-600 dark:hover:bg-indigo-700 ${
           showPulse ? 'animate-pulse' : ''
         }`}
-        style={{ bottom: '5.5rem' }}
+        style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
         aria-label="Send feedback"
       >
         <MessageSquare className="h-6 w-6" />

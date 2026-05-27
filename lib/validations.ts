@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 const paymentMethods = ["Cash", "Credit Card", "Venmo", "Zelle", "PayPal"] as const;
-const tourPrivacy = ["private", "non-private"] as const;
-
 export const TipEntryFormSchema = z.object({
   date: z.string({
     error: (issue) =>
@@ -59,9 +57,6 @@ export const TipEntryFormSchema = z.object({
     error: "Location is required",
   }).min(1, { error: "Location is required" }).default("Universal Studios Florida & Islands of Adventure"),
 
-  isPrivate: z.enum(tourPrivacy, {
-    error: "Please select a valid tour privacy type",
-  }).default("private"),
 });
 
 export type TipEntryFormValues = z.infer<typeof TipEntryFormSchema>;

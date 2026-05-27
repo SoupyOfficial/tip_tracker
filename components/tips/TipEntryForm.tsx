@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { TipEntryFormSchema } from "@/lib/validations";
 import type { TipEntryFormValues } from "@/lib/validations";
-import type { TipEntry, TourType, PaymentMethod, Location, TourPrivacy } from "@/lib/types";
+import type { TipEntry, TourType, PaymentMethod, Location } from "@/lib/types";
 import { getCustomLocations, getCustomTourTypes, addCustomLocation, addCustomTourType } from "@/lib/settings";
 
 const paymentMethods: PaymentMethod[] = ["Cash", "Credit Card", "Venmo", "Zelle", "PayPal"];
@@ -53,10 +53,6 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
   const [location, setLocation] = useState<Location>(
     initialData?.location ?? getStoredDefault<Location>(STORAGE_KEY_LAST_LOCATION, "Universal Studios Florida & Islands of Adventure")
   );
-  const [isPrivate, setIsPrivate] = useState<TourPrivacy>(
-    initialData?.isPrivate ?? "private"
-  );
-
   const [tourTypes, setTourTypes] = useState<string[]>(getCustomTourTypes);
   const [locations, setLocations] = useState<string[]>(getCustomLocations);
 
@@ -108,13 +104,12 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
       rating: parseInt(rating, 10),
       paymentMethod,
       location,
-      isPrivate,
     };
     if (notes.trim()) {
       data.notes = notes.trim();
     }
     return data;
-  }, [date, amount, tourType, guestCount, rating, paymentMethod, location, notes, isPrivate]);
+  }, [date, amount, tourType, guestCount, rating, paymentMethod, location, notes]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,7 +176,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
             setQuickAdd((prev) => !prev);
             clearErrors();
           }}
-          className="text-sm font-medium text-blue-600 underline underline-offset-2"
+          className="min-h-[44px] min-w-[44px] text-sm font-medium text-blue-600 underline underline-offset-2"
         >
           {quickAdd ? "Full Form" : "Quick Add"}
         </button>
@@ -231,7 +226,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={type}
                   type="button"
                   onClick={() => setTourType(type)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     tourType === type
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -243,7 +238,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomTourType}
-                className="rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom tour type"
               >
                 +
@@ -252,36 +247,6 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
             {fieldErrors.tourType && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.tourType}</p>
             )}
-          </div>
-
-          {/* Privacy Toggle - quick add */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Privacy
-            </label>
-            <div className="flex gap-2">
-              {(["private", "non-private"] as TourPrivacy[]).map((privacy) => (
-                <button
-                  key={privacy}
-                  type="button"
-                  onClick={() => setIsPrivate(privacy)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    isPrivate === privacy
-                      ? privacy === "private"
-                        ? "bg-emerald-600 text-white"
-                        : "bg-amber-500 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                  }`}
-                >
-                  {privacy === "private" ? "Private" : "Non-Private"}
-                </button>
-              ))}
-            </div>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              {isPrivate === "private"
-                ? "Private: single group · better tips"
-                : "Non-private: multiple groups · lower tips"}
-            </p>
           </div>
 
           {/* Save button */}
@@ -355,7 +320,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={type}
                   type="button"
                   onClick={() => setTourType(type)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     tourType === type
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -367,7 +332,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomTourType}
-                className="rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom tour type"
               >
                 +
@@ -407,7 +372,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={star}
                   type="button"
                   onClick={() => setRating(star.toString())}
-                  className={`h-10 w-10 rounded-lg text-lg font-semibold transition-colors ${
+                  className={`h-11 w-11 rounded-lg text-lg font-semibold transition-colors ${
                     parseInt(rating, 10) >= star
                       ? "bg-yellow-400 text-yellow-900"
                       : "bg-gray-100 text-gray-400 hover:bg-gray-200"
@@ -465,7 +430,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomLocation}
-                className="rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-[44px] min-w-[44px] rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom location"
               >
                 +
@@ -474,36 +439,6 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
             {fieldErrors.location && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.location}</p>
             )}
-          </div>
-
-          {/* Privacy Toggle */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Privacy
-            </label>
-            <div className="flex gap-2">
-              {(["private", "non-private"] as TourPrivacy[]).map((privacy) => (
-                <button
-                  key={privacy}
-                  type="button"
-                  onClick={() => setIsPrivate(privacy)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    isPrivate === privacy
-                      ? privacy === "private"
-                        ? "bg-emerald-600 text-white"
-                        : "bg-amber-500 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-                  }`}
-                >
-                  {privacy === "private" ? "Private" : "Non-Private"}
-                </button>
-              ))}
-            </div>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              {isPrivate === "private"
-                ? "Private: single group · better tips"
-                : "Non-private: multiple groups · lower tips"}
-            </p>
           </div>
 
           {/* Notes */}

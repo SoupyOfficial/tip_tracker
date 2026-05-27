@@ -46,7 +46,7 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+      <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 pt-[env(safe-area-inset-top)]">
         <div className="flex h-14 items-center justify-between px-4">
           <h2 className="text-lg font-semibold text-card-foreground">Tip Tracker</h2>
           <button
@@ -68,7 +68,7 @@ export default function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pb-20">
+      <main className="flex-1 pt-[calc(3.5rem+env(safe-area-inset-top))] pb-[calc(6rem+env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-2xl px-4 py-6">
           {children}
         </div>

@@ -1,15 +1,14 @@
 import { parse, isValid } from 'date-fns';
 import { addTip } from './db';
-import type { TipEntry, TourType, PaymentMethod, Location, TourPrivacy, Rating } from './types';
+import type { TipEntry, TourType, PaymentMethod, Location, Rating } from './types';
 
-const VALID_TOUR_TYPES: TourType[] = ['VIP', 'Standard', 'Corporate', 'Mixed'];
+const VALID_TOUR_TYPES: TourType[] = ['Private', 'Non-Private'];
 const VALID_PAYMENT_METHODS: PaymentMethod[] = ['Cash', 'Credit Card', 'Venmo', 'Zelle', 'PayPal'];
 const VALID_LOCATIONS: Location[] = [
   'Universal Studios Florida & Islands of Adventure',
   'Epic Universe',
   'All Parks',
 ];
-const VALID_PRIVACY: TourPrivacy[] = ['private', 'non-private'];
 const VALID_RATINGS: Rating[] = [1, 2, 3, 4, 5];
 
 function parseDate(value: unknown): { date: string | null; error: string | null } {
@@ -66,19 +65,6 @@ function parseLocation(value: unknown): { location: Location | null; error: stri
   return { location: normalized, error: null };
 }
 
-function parsePrivacy(value: unknown): { isPrivate: TourPrivacy | null; error: string | null } {
-  if (typeof value === 'boolean') {
-    return { isPrivate: value ? 'private' : 'non-private', error: null };
-  }
-  if (typeof value === 'string') {
-    const normalized = value.trim().toLowerCase();
-    if (normalized === 'true' || normalized === 'private') return { isPrivate: 'private', error: null };
-    if (normalized === 'false' || normalized === 'non-private') return { isPrivate: 'non-private', error: null };
-    return { isPrivate: null, error: `Invalid isPrivate: ${value}. Must be "true", "false", "private", or "non-private"` };
-  }
-  return { isPrivate: null, error: `Invalid isPrivate: ${String(value)}` };
-}
-
 function parseRating(value: unknown): { rating: Rating | null; error: string | null } {
   const num = typeof value === 'string' ? parseInt(value.trim(), 10) : typeof value === 'number' ? Math.round(value) : null;
   if (num === null || isNaN(num)) return { rating: null, error: `Invalid rating: ${String(value)}` };
@@ -126,9 +112,6 @@ function normalizeTipObject(obj: Record<string, unknown>, index: number): { tip:
   const locationResult = parseLocation(obj.location);
   if (locationResult.error) errors.push(locationResult.error);
 
-  const privacyResult = parsePrivacy(obj.isPrivate);
-  if (privacyResult.error) errors.push(privacyResult.error);
-
   if (errors.length > 0) {
     return { tip: null, error: `Row ${index + 1}: ${errors.join('; ')}` };
   }
@@ -145,7 +128,6 @@ function normalizeTipObject(obj: Record<string, unknown>, index: number): { tip:
       currency: 'USD',
       paymentMethod: paymentResult.paymentMethod!,
       location: locationResult.location!,
-      isPrivate: privacyResult.isPrivate!,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
@@ -275,7 +257,6 @@ export async function importTips(tips: TipEntry[]): Promise<{ imported: number; 
         currency: tip.currency,
         paymentMethod: tip.paymentMethod,
         location: tip.location,
-        isPrivate: tip.isPrivate,
       });
       imported++;
     } catch (err) {

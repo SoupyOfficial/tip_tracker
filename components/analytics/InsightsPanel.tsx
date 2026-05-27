@@ -14,7 +14,7 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import type { AnalyticsSummary, TourPrivacy, TourType } from '@/lib/types';
+import type { AnalyticsSummary, TourType } from '@/lib/types';
 
 const DAY_COLORS: Record<string, string> = {
   Sun: '#3b82f6',
@@ -51,7 +51,6 @@ export function InsightsPanel({ analytics }: InsightsPanelProps) {
     tourTypeBreakdown,
     monthlyTrends,
     dayOfWeekBreakdown,
-    privacyBreakdown,
   } = analytics;
 
   const hasData = analytics.totalTours > 0;
@@ -131,8 +130,8 @@ export function InsightsPanel({ analytics }: InsightsPanelProps) {
               data={paymentData}
               cx="50%"
               cy="50%"
-              innerRadius={50}
-              outerRadius={80}
+              innerRadius={40}
+              outerRadius={65}
               paddingAngle={2}
               dataKey="value"
             >
@@ -151,7 +150,7 @@ export function InsightsPanel({ analytics }: InsightsPanelProps) {
             />
           </PieChart>
         </ResponsiveContainer>
-        <div className="mt-2 flex flex-wrap gap-3">
+        <div className="mt-2 flex flex-wrap gap-2 sm:gap-3">
           {paymentData.map((item) => (
             <div key={item.name} className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
               <span
@@ -224,63 +223,6 @@ export function InsightsPanel({ analytics }: InsightsPanelProps) {
         </div>
       )}
 
-      {/* Private vs Non-Private */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Private vs Non-Private
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          {(["private", "non-private"] as TourPrivacy[]).map((privacy) => {
-            const data = privacyBreakdown[privacy];
-            const hasData = data.count > 0;
-            const isPrivate = privacy === "private";
-            return (
-              <div
-                key={privacy}
-                className={`rounded-lg border p-4 ${
-                  isPrivate
-                    ? "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-900/20"
-                    : "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20"
-                }`}
-              >
-                <p className={`text-sm font-medium ${
-                  isPrivate
-                    ? "text-emerald-700 dark:text-emerald-400"
-                    : "text-amber-700 dark:text-amber-400"
-                }`}>
-                  {isPrivate ? "Private Tours" : "Non-Private Tours"}
-                </p>
-                {hasData ? (
-                  <div className="mt-2 space-y-1">
-                    <p className={`text-2xl font-bold ${
-                      isPrivate
-                        ? "text-emerald-900 dark:text-emerald-100"
-                        : "text-amber-900 dark:text-amber-100"
-                    }`}>
-                      ${data.average.toFixed(2)}
-                    </p>
-                    <p className={`text-xs ${
-                      isPrivate
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-amber-600 dark:text-amber-400"
-                    }`}>
-                      {data.count} tour{data.count !== 1 ? 's' : ''} · ${data.total.toFixed(2)} total
-                    </p>
-                  </div>
-                ) : (
-                  <p className={`mt-2 text-sm ${
-                    isPrivate
-                      ? "text-emerald-500 dark:text-emerald-400"
-                      : "text-amber-500 dark:text-amber-400"
-                  }`}>
-                    No {isPrivate ? 'private' : 'non-private'} tours yet
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }

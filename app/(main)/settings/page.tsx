@@ -59,7 +59,7 @@ function TagItem({
       <button
         type="button"
         onClick={onRemove}
-        className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         aria-label={`Remove ${label}`}
       >
         <X className="h-4 w-4" />
@@ -99,7 +99,7 @@ function AddItemRow({
         type="button"
         onClick={handleSubmit}
         disabled={!value.trim()}
-        className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Add item"
       >
         <Plus className="h-4 w-4" />
@@ -330,7 +330,7 @@ export default function SettingsPage() {
             </div>
           )}
           <div className="border-t border-border pt-2 text-center text-xs text-muted-foreground">
-            Made with care for VIP Tour Guides
+            Made with care for my love Ashley Garcia (Soon to be Campbell)
           </div>
         </div>
       </SectionCard>

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { getAnalytics } from '@/lib/db';
-import type { AnalyticsSummary, TourType, TourPrivacy } from '@/lib/types';
+import type { AnalyticsSummary, TourType } from '@/lib/types';
 import { InsightsPanel } from '@/components/analytics/InsightsPanel';
 
-const TOUR_TYPE_ORDER: TourType[] = ['VIP', 'Standard', 'Corporate', 'Mixed'];
+const TOUR_TYPE_ORDER: TourType[] = ['Private', 'Non-Private'];
 const TOUR_TYPE_EMOJIS: Record<TourType, string> = {
   VIP: '👑',
   Standard: '🎯',
@@ -54,53 +54,24 @@ export default function Dashboard() {
       </h1>
 
       {/* Summary Stat Cards */}
-      <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800">
           <p className="text-sm text-gray-500 dark:text-gray-400">Total Tips</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             ${analytics.totalTips.toFixed(2)}
           </p>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800">
           <p className="text-sm text-gray-500 dark:text-gray-400">Avg per Tour</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             ${analytics.averagePerTour.toFixed(2)}
           </p>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 dark:border-gray-700 dark:bg-gray-800">
           <p className="text-sm text-gray-500 dark:text-gray-400">Total Tours</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             {analytics.totalTours}
           </p>
-        </div>
-      </div>
-
-      {/* Privacy Summary */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex items-center gap-6">
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Private Tours</p>
-              <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                ${analytics.privacyBreakdown.private.average.toFixed(2)} avg
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Non-Private Tours</p>
-              <p className="text-lg font-semibold text-amber-600 dark:text-amber-400">
-                ${analytics.privacyBreakdown["non-private"].average.toFixed(2)} avg
-              </p>
-            </div>
-          </div>
-          {(() => {
-            const diff = analytics.privacyBreakdown.private.average - analytics.privacyBreakdown["non-private"].average;
-            if (diff === 0) return null;
-            return (
-              <p className={`text-sm font-medium ${diff > 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
-                Private tours earn ${Math.abs(diff).toFixed(2)} {diff > 0 ? "more" : "less"} on avg
-              </p>
-            );
-          })()}
         </div>
       </div>
 

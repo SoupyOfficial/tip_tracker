@@ -1,13 +1,21 @@
 import Dexie, { type EntityTable } from 'dexie';
 import { getDay } from 'date-fns';
-import type { TipEntry, TipFilters, AnalyticsSummary, PaymentMethod, TourType, Rating, TourPrivacy } from './types';
+import type { TipEntry, TipFilters, AnalyticsSummary, PaymentMethod, TourType, Rating } from './types';
 
 const db = new Dexie('TipTrackerDB') as Dexie & {
   tips: EntityTable<TipEntry, 'id'>;
 };
 
 db.version(1).stores({
-  tips: '++id, date, tourType, paymentMethod, rating, isPrivate, location',
+  tips: '++id, date, tourType, paymentMethod, rating, location',
+});
+
+db.version(2).stores({
+  tips: '++id, date, tourType, paymentMethod, rating, location',
+}).upgrade((tx) => {
+  return tx.table('tips').toCollection().modify((tip: Record<string, unknown>) => {
+    delete tip.isPrivate;
+  });
 });
 
 export { db };
@@ -47,7 +55,7 @@ export async function getAllTips(filters?: TipFilters): Promise<TipEntry[]> {
 
   if (!filters) return tips;
 
-  const { search, tourType, paymentMethod, rating, dateRange, sortBy, sortOrder, isPrivate } = filters;
+  const { search, tourType, paymentMethod, rating, dateRange, sortBy, sortOrder } = filters;
 
   if (search) {
     const lowerSearch = search.toLowerCase();
@@ -72,10 +80,6 @@ export async function getAllTips(filters?: TipFilters): Promise<TipEntry[]> {
 
   if (dateRange) {
     tips = tips.filter((t) => t.date >= dateRange.start && t.date <= dateRange.end);
-  }
-
-  if (isPrivate) {
-    tips = tips.filter((t) => t.isPrivate === isPrivate);
   }
 
   if (sortBy) {
@@ -108,7 +112,7 @@ export async function getAnalytics(): Promise<AnalyticsSummary> {
     };
   }
 
-  const tourTypes: TourType[] = ['VIP', 'Standard', 'Corporate', 'Mixed'];
+  const tourTypes: TourType[] = ['Private', 'Non-Private'];
   const tourTypeBreakdown = {} as Record<TourType, { count: number; total: number; average: number }>;
   for (const type of tourTypes) {
     const filtered = tips.filter((t) => t.tourType === type);
@@ -177,18 +181,6 @@ export async function getAnalytics(): Promise<AnalyticsSummary> {
     average: data.count > 0 ? data.total / data.count : 0,
   }));
 
-  const privacyTypes: TourPrivacy[] = ['private', 'non-private'];
-  const privacyBreakdown = {} as Record<TourPrivacy, { count: number; total: number; average: number }>;
-  for (const type of privacyTypes) {
-    const filtered = tips.filter((t) => t.isPrivate === type);
-    const total = filtered.reduce((sum, t) => sum + t.amount, 0);
-    privacyBreakdown[type] = {
-      count: filtered.length,
-      total,
-      average: filtered.length > 0 ? total / filtered.length : 0,
-    };
-  }
-
   return {
     totalTips,
     averagePerTour,
@@ -200,6 +192,5 @@ export async function getAnalytics(): Promise<AnalyticsSummary> {
     monthlyTrends,
     perTourAverages,
     dayOfWeekBreakdown,
-    privacyBreakdown,
   };
 }

@@ -47,7 +47,7 @@ function TipItem({
           <button
             type="button"
             onClick={() => router.push(`/tips/edit?id=${tip.id}`)}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-amber-50 hover:text-amber-600 active:bg-amber-100"
+            className="rounded-lg p-2.5 text-gray-400 transition-colors hover:bg-amber-50 hover:text-amber-600 active:bg-amber-100 min-h-[44px] min-w-[44px]"
             aria-label="Edit tip"
           >
             <svg
@@ -69,7 +69,7 @@ function TipItem({
           <button
             type="button"
             onClick={() => onDelete(tip.id)}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 active:bg-red-100"
+            className="rounded-lg p-2.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 active:bg-red-100 min-h-[44px] min-w-[44px]"
             aria-label="Delete tip"
           >
             <svg
@@ -90,7 +90,7 @@ function TipItem({
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-3 flex items-center flex-wrap gap-1.5">
         <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
           {tip.paymentMethod}
         </span>
