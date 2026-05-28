@@ -76,7 +76,7 @@ export default function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-[calc(6rem+env(safe-area-inset-bottom))]">
+      <main className="flex-1 pt-3 pb-[calc(6rem+env(safe-area-inset-bottom))]">
         <div className="mx-auto max-w-2xl px-4">
           {children}
         </div>
