@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Plus, List, Home, Settings } from 'lucide-react'
 
 interface AppShellProps {
@@ -12,7 +12,7 @@ interface AppShellProps {
 export default function AppShell({ children }: AppShellProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const [addMode, setAddMode] = useState<'quick' | 'full'>('quick')
 
   useEffect(() => {
     const stored = localStorage.getItem('darkMode')
@@ -22,12 +22,28 @@ export default function AppShell({ children }: AppShellProps) {
   }, [])
 
   const isAddPage = pathname.startsWith('/add')
-  const quickAddEnabled = searchParams.get('mode') !== 'full'
+
+  useEffect(() => {
+    if (!isAddPage) return
+
+    const syncAddMode = () => {
+      const currentMode = new URL(window.location.href).searchParams.get('mode') === 'full'
+        ? 'full'
+        : 'quick'
+      setAddMode(currentMode)
+    }
+
+    syncAddMode()
+    window.addEventListener('popstate', syncAddMode)
+
+    return () => window.removeEventListener('popstate', syncAddMode)
+  }, [isAddPage])
 
   const handleHeaderAction = () => {
     if (!isAddPage) return
 
-    const nextMode = quickAddEnabled ? 'full' : 'quick'
+    const nextMode = addMode === 'quick' ? 'full' : 'quick'
+    setAddMode(nextMode)
     router.replace(`/add?mode=${nextMode}`)
   }
 
@@ -49,9 +65,9 @@ export default function AppShell({ children }: AppShellProps) {
               type="button"
               onClick={handleHeaderAction}
               className="flex h-11 min-h-11 items-center rounded-full border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-              aria-label={quickAddEnabled ? 'Switch to full form' : 'Switch to quick add'}
+              aria-label={addMode === 'quick' ? 'Switch to full form' : 'Switch to quick add'}
             >
-              {quickAddEnabled ? 'Full Form' : 'Quick Add'}
+              {addMode === 'quick' ? 'Full Form' : 'Quick Add'}
             </button>
           ) : (
             <div className="h-11 w-11" />

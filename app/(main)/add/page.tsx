@@ -1,15 +1,20 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import TipEntryForm from "@/components/tips/TipEntryForm";
 import { useTipMutations } from "@/hooks/useTips";
 import type { TipEntryFormValues } from "@/lib/validations";
 
 export default function AddTipPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { addTip } = useTipMutations();
-  const defaultQuickAdd = searchParams.get('mode') !== 'full';
+  const [defaultQuickAdd, setDefaultQuickAdd] = useState(true);
+
+  useEffect(() => {
+    const mode = new URL(window.location.href).searchParams.get('mode');
+    setDefaultQuickAdd(mode !== 'full');
+  }, []);
 
   const handleSubmit = async (values: TipEntryFormValues) => {
     await addTip(values);
