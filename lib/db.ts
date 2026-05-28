@@ -124,7 +124,10 @@ export async function getAnalytics(): Promise<AnalyticsSummary> {
     };
   }
 
-  const averageRating = tips.length > 0 ? tips.reduce((sum, t) => sum + t.rating, 0) / tips.length : 0;
+  const validRatings = tips.filter(t => t.rating != null);
+  const averageRating = validRatings.length > 0
+    ? validRatings.reduce((sum, t) => sum + (t.rating as number), 0) / validRatings.length
+    : 0;
 
   const dailyTotals = tips.reduce<Record<string, number>>((acc, t) => {
     acc[t.date] = (acc[t.date] || 0) + t.amount;
@@ -159,7 +162,7 @@ export async function getAnalytics(): Promise<AnalyticsSummary> {
   for (const type of tourTypes) {
     const filtered = tips.filter((t) => t.tourType === type);
     const totalTip = filtered.reduce((sum, t) => sum + t.amount, 0);
-    const totalGuests = filtered.reduce((sum, t) => sum + t.guestCount, 0);
+    const totalGuests = filtered.reduce((sum, t) => sum + (t.guestCount ?? 0), 0);
     perTourAverages[type] = {
       averageTip: filtered.length > 0 ? totalTip / filtered.length : 0,
       count: filtered.length,

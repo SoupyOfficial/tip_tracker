@@ -100,10 +100,18 @@ function normalizeTipObject(obj: Record<string, unknown>, index: number): { tip:
   const tourTypeResult = parseTourType(obj.tourType);
   if (tourTypeResult.error) errors.push(tourTypeResult.error);
 
-  const guestResult = parsePositiveInt(obj.guestCount, 'guestCount');
+  const guestValue = obj.guestCount;
+  const guestResult =
+    guestValue === null || guestValue === undefined || (typeof guestValue === 'string' && guestValue.trim() === '')
+      ? { num: null as number | null, error: null as string | null }
+      : parsePositiveInt(guestValue, 'guestCount');
   if (guestResult.error) errors.push(guestResult.error);
 
-  const ratingResult = parseRating(obj.rating);
+  const ratingValue = obj.rating;
+  const ratingResult =
+    ratingValue === null || ratingValue === undefined || (typeof ratingValue === 'string' && ratingValue.trim() === '')
+      ? { rating: null as Rating | null, error: null as string | null }
+      : parseRating(ratingValue);
   if (ratingResult.error) errors.push(ratingResult.error);
 
   const paymentResult = parsePaymentMethod(obj.paymentMethod);
@@ -122,8 +130,8 @@ function normalizeTipObject(obj: Record<string, unknown>, index: number): { tip:
       date: dateResult.date!,
       amount: amountResult.amount!,
       tourType: tourTypeResult.tourType!,
-      guestCount: guestResult.num!,
-      rating: ratingResult.rating!,
+      guestCount: guestResult.num ?? null,
+      rating: ratingResult.rating ?? null,
       notes: typeof obj.notes === 'string' ? obj.notes : undefined,
       currency: 'USD',
       paymentMethod: paymentResult.paymentMethod!,

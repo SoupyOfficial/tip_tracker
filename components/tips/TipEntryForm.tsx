@@ -162,7 +162,7 @@ export default function TipEntryForm({
       amount: parseFloat(amount),
       tourType,
       location,
-      guestCount: 1,
+      guestCount: null,
       rating: null,
       paymentMethod: null,
       notes: null,

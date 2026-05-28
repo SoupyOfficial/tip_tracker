@@ -97,9 +97,15 @@ function TipItem({
         <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
           {tip.location}
         </span>
-        <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-700">
-          {'★'.repeat(tip.rating)}{'☆'.repeat(5 - tip.rating)}
-        </span>
+        {tip.rating ? (
+          <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-700">
+            {'★'.repeat(tip.rating)}{'☆'.repeat(5 - tip.rating)}
+          </span>
+        ) : (
+          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-400">
+            —
+          </span>
+        )}
       </div>
     </div>
   );

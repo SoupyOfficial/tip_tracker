@@ -1,5 +1,5 @@
 export type TourType = string;
-export type Rating = 1 | 2 | 3 | 4 | 5;
+export type Rating = 1 | 2 | 3 | 4 | 5 | null;
 export type Currency = "USD";
 export type PaymentMethod = "Cash" | "Credit Card" | "Venmo" | "Zelle" | "PayPal";
 export type Location = string;
@@ -9,7 +9,7 @@ export interface TipEntry {
   date: string;
   amount: number;
   tourType: TourType;
-  guestCount: number;
+  guestCount: number | null;
   rating: Rating;
   notes?: string;
   currency: Currency;
