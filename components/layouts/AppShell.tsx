@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Sun, Moon, Plus, List, Home, Settings } from 'lucide-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Plus, List, Home, Settings } from 'lucide-react'
 
 interface AppShellProps {
   children: ReactNode
@@ -11,29 +11,24 @@ interface AppShellProps {
 
 export default function AppShell({ children }: AppShellProps) {
   const pathname = usePathname()
-  const [isDark, setIsDark] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    setMounted(true)
     const stored = localStorage.getItem('darkMode')
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     const initialDark = stored === 'dark' || (stored === null && prefersDark)
-    setIsDark(initialDark)
-    if (initialDark) {
-      document.documentElement.classList.add('dark')
-    }
+    document.documentElement.classList.toggle('dark', initialDark)
   }, [])
 
-  const toggleDark = () => {
-    const newMode = !isDark
-    setIsDark(newMode)
-    localStorage.setItem('darkMode', newMode ? 'dark' : 'light')
-    if (newMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
+  const isAddPage = pathname.startsWith('/add')
+  const quickAddEnabled = searchParams.get('mode') !== 'full'
+
+  const handleHeaderAction = () => {
+    if (!isAddPage) return
+
+    const nextMode = quickAddEnabled ? 'full' : 'quick'
+    router.replace(`/add?mode=${nextMode}`)
   }
 
   const navItems = [
@@ -46,36 +41,33 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 pt-[env(safe-area-inset-top)]">
+      <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60 pt-[env(safe-area-inset-top)]">
         <div className="flex h-14 items-center justify-between px-4">
           <h2 className="text-lg font-semibold text-card-foreground">Tip Tracker</h2>
-          <button
-            onClick={toggleDark}
-            className="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-accent min-h-[44px] min-w-[44px]"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {mounted ? (
-              isDark ? (
-                <Sun className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <Moon className="h-5 w-5 text-muted-foreground" />
-              )
-            ) : (
-              <div className="h-5 w-5" />
-            )}
-          </button>
+          {isAddPage ? (
+            <button
+              type="button"
+              onClick={handleHeaderAction}
+              className="flex h-11 min-h-11 items-center rounded-full border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+              aria-label={quickAddEnabled ? 'Switch to full form' : 'Switch to quick add'}
+            >
+              {quickAddEnabled ? 'Full Form' : 'Quick Add'}
+            </button>
+          ) : (
+            <div className="h-11 w-11" />
+          )}
         </div>
       </header>
 
       {/* Main content */}
-      <main className="flex-1 pt-[calc(3.5rem+env(safe-area-inset-top))] pb-[calc(6rem+env(safe-area-inset-bottom))]">
-        <div className="mx-auto max-w-2xl px-4 py-6">
+      <main className="flex-1 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-[calc(6rem+env(safe-area-inset-bottom))]">
+        <div className="mx-auto max-w-2xl px-4">
           {children}
         </div>
       </main>
 
       {/* Bottom tab bar */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60 safe-area-bottom">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60 safe-area-bottom">
         <div className="flex h-16 items-center justify-around">
           {navItems.map(({ href, icon: Icon, label }) => {
             const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
@@ -83,7 +75,7 @@ export default function AppShell({ children }: AppShellProps) {
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center gap-1 rounded-lg px-4 py-2 transition-colors min-h-[44px] min-w-[44px] ${
+                className={`flex min-h-11 min-w-11 flex-col items-center gap-1 rounded-lg px-4 py-2 transition-colors ${
                   isActive
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'

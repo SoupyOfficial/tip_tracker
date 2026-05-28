@@ -29,12 +29,18 @@ interface TipEntryFormProps {
   initialData?: TipEntry | null;
   onSubmit: (values: TipEntryFormValues) => Promise<void>;
   onCancel?: () => void;
+  defaultQuickAdd?: boolean;
 }
 
-export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEntryFormProps) {
+export default function TipEntryForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  defaultQuickAdd = true,
+}: TipEntryFormProps) {
   const isEdit = !!initialData;
 
-  const [quickAdd, setQuickAdd] = useState(!isEdit);
+  const [quickAdd, setQuickAdd] = useState(!isEdit && defaultQuickAdd);
   const [submitting, setSubmitting] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -55,6 +61,10 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
   );
   const [tourTypes, setTourTypes] = useState<string[]>(getCustomTourTypes);
   const [locations, setLocations] = useState<string[]>(getCustomLocations);
+
+  useEffect(() => {
+    setQuickAdd(!isEdit && defaultQuickAdd)
+  }, [defaultQuickAdd, isEdit])
 
   useEffect(() => {
     setTourTypes(getCustomTourTypes());
@@ -152,7 +162,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
       amount: parseFloat(amount),
       tourType,
       location,
-      guestCount: null,
+      guestCount: 1,
       rating: null,
       paymentMethod: null,
       notes: null,
@@ -177,20 +187,6 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
 
   return (
     <form onSubmit={quickAdd ? handleQuickAdd : handleSubmit} className="space-y-4">
-      {/* Toggle */}
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => {
-            setQuickAdd((prev) => !prev);
-            clearErrors();
-          }}
-          className="min-h-[44px] min-w-[44px] text-sm font-medium text-blue-600 underline underline-offset-2"
-        >
-          {quickAdd ? "Full Form" : "Quick Add"}
-        </button>
-      </div>
-
       {/* General error banner */}
       {generalError && (
         <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
@@ -235,7 +231,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={type}
                   type="button"
                   onClick={() => setTourType(type)}
-                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     tourType === type
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -247,7 +243,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomTourType}
-                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-11 rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom tour type"
               >
                 +
@@ -269,7 +265,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={loc}
                   type="button"
                   onClick={() => setLocation(loc)}
-                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     location === loc
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -281,7 +277,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomLocation}
-                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-11 rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom location"
               >
                 +
@@ -363,7 +359,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
                   key={type}
                   type="button"
                   onClick={() => setTourType(type)}
-                  className={`min-h-[44px] rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     tourType === type
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -375,7 +371,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomTourType}
-                className="min-h-[44px] rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-11 rounded-full px-3 py-2 text-sm font-medium bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom tour type"
               >
                 +
@@ -473,7 +469,7 @@ export default function TipEntryForm({ initialData, onSubmit, onCancel }: TipEnt
               <button
                 type="button"
                 onClick={handleAddCustomLocation}
-                className="min-h-[44px] min-w-[44px] rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 transition-colors"
+                className="min-h-11 min-w-11 rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-200 transition-colors"
                 title="Add custom location"
               >
                 +

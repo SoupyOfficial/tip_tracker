@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { db } from '@/lib/db';
 import { useExport, useImportTips } from '@/hooks/useTips';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
+import ThemeToggleButton from '@/components/shared/ThemeToggleButton';
 import {
   getCustomLocations,
   addCustomLocation,
@@ -197,6 +198,11 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold tracking-tight text-foreground">Settings</h1>
+
+      <section className="space-y-3">
+        <p className="text-sm font-medium text-muted-foreground">Appearance</p>
+        <ThemeToggleButton />
+      </section>
 
       {/* Section 1: Data Management */}
       <SectionCard icon={Download} title="Data Management">

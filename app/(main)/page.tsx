@@ -7,8 +7,8 @@ import { InsightsPanel } from '@/components/analytics/InsightsPanel';
 
 const TOUR_TYPE_ORDER: TourType[] = ['Private', 'Non-Private'];
 const TOUR_TYPE_EMOJIS: Record<TourType, string> = {
-  VIP: '👑',
-  Standard: '🎯',
+  Private: '👑',
+  'Non-Private': '🎯',
   Corporate: '🏢',
   Mixed: '🔀',
 };
@@ -34,7 +34,7 @@ export default function Dashboard() {
 
   if (!analytics || analytics.totalTours === 0) {
     return (
-      <div className="mx-auto max-w-4xl p-4">
+      <div className="space-y-6">
         <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Tip Tracker Dashboard
         </h1>
@@ -48,7 +48,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl p-4">
+    <div className="space-y-6">
       <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
         Tip Tracker Dashboard
       </h1>
