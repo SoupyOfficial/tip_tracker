@@ -94,7 +94,7 @@ function AddItemRow({
           if (e.key === 'Enter') handleSubmit();
         }}
         placeholder={placeholder}
-        className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-gray-900 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
       />
       <button
         type="button"
@@ -240,7 +240,7 @@ export default function SettingsPage() {
                 accept=".json,.csv"
                 onChange={handleFileChange}
                 disabled={importLoading}
-                className="flex-1 text-sm text-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground file:transition-colors hover:file:bg-primary/90 file:disabled:opacity-50"
+                className="flex-1 text-sm text-gray-900 file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground file:transition-colors hover:file:bg-primary/90 file:disabled:opacity-50"
               />
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
