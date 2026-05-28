@@ -33,7 +33,7 @@ function TipItem({
               day: 'numeric',
             })}
           </p>
-          {tip.guestCount > 0 && (
+          {(tip.guestCount ?? 0) > 0 && (
             <p className="text-xs text-gray-500">{tip.guestCount} guests</p>
           )}
           {tip.notes && (

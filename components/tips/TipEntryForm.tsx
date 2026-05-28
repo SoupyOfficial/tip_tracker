@@ -317,7 +317,7 @@ export default function TipEntryForm({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
             {fieldErrors.date && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.date}</p>
@@ -340,7 +340,7 @@ export default function TipEntryForm({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-8 pr-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-8 pr-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               />
             </div>
             {fieldErrors.amount && (
@@ -393,7 +393,7 @@ export default function TipEntryForm({
               inputMode="numeric"
               value={guestCount}
               onChange={(e) => setGuestCount(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
             {fieldErrors.guestCount && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.guestCount}</p>
@@ -435,7 +435,7 @@ export default function TipEntryForm({
               id="paymentMethod"
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             >
               {paymentMethods.map((method) => (
                 <option key={method} value={method}>
@@ -458,7 +458,7 @@ export default function TipEntryForm({
                 id="location"
                 value={location}
                 onChange={(e) => setLocation(e.target.value as Location)}
-                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               >
                 {locations.map((loc) => (
                   <option key={loc} value={loc}>
@@ -490,7 +490,7 @@ export default function TipEntryForm({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               maxLength={500}
             />
             {fieldErrors.notes && (

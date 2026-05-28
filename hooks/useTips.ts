@@ -73,7 +73,11 @@ export function useTipMutations() {
     setLoading(true);
     try {
       const parsed = TipEntryFormSchema.parse(values);
-      const id = await dbAddTip({ ...parsed, rating: parsed.rating as Rating });
+      const id = await dbAddTip({
+        ...parsed,
+        guestCount: parsed.guestCount ?? null,
+        rating: (parsed.rating ?? null) as Rating,
+      });
       toast.success('Tip added', { description: `$${parsed.amount.toFixed(2)} saved successfully` });
       return id;
     } catch (err) {
@@ -135,7 +139,7 @@ function downloadFile(content: string, filename: string, mimeType: string) {
 
 function tipsToCSV(tips: TipEntry[]): string {
   const headers = ['id', 'date', 'amount', 'tourType', 'guestCount', 'rating', 'notes', 'currency', 'paymentMethod', 'location', 'createdAt', 'updatedAt'];
-  const escapeCSV = (val: string | number | undefined) => {
+  const escapeCSV = (val: string | number | null | undefined) => {
     if (val === undefined || val === null) return '';
     const str = String(val);
     if (str.includes(',') || str.includes('"') || str.includes('\n')) {

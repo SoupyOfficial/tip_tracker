@@ -86,6 +86,9 @@ export async function getAllTips(filters?: TipFilters): Promise<TipEntry[]> {
     tips.sort((a, b) => {
       const aVal = a[sortBy];
       const bVal = b[sortBy];
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
       if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
       if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
       return 0;
