@@ -162,17 +162,19 @@ export default function TipEntryForm({
     clearErrors();
     setSubmitting(true);
 
-    const formData = {
+    const formData: Record<string, unknown> = {
       date,
       amount: parseFloat(amount),
       tourType,
       location,
-      guestCount: null,
-      rating: null,
-      paymentMethod: null,
-      notes: null,
-      name: name.trim() || null,
+      paymentMethod,
     };
+    if (name.trim()) {
+      formData.name = name.trim();
+    }
+    if (notes.trim()) {
+      formData.notes = notes.trim();
+    }
     const result = TipEntryFormSchema.safeParse(formData);
 
     if (!result.success) {
