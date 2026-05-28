@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { MessageSquare, Bug, Lightbulb, Send, X } from 'lucide-react'
 import { toast } from 'sonner'
+import { Keyboard } from '@capacitor/keyboard'
 
 type Category = 'Bug' | 'Feature Request' | 'Suggestion' | 'Other'
 
@@ -18,12 +19,41 @@ export default function FeedbackButton() {
   const [message, setMessage] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<Category>('Suggestion')
   const [showPulse, setShowPulse] = useState(true)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL?.trim() || ''
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL?.trim() || 'jscampbell21@outlook.com'
 
   useEffect(() => {
     const timer = setTimeout(() => setShowPulse(false), 8000)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    let cleanup: (() => void)[] = []
+
+    const handleShow = (info: { keyboardHeight: number }) => {
+      setKeyboardHeight(info.keyboardHeight)
+    }
+    const handleHide = () => {
+      setKeyboardHeight(0)
+    }
+
+    Keyboard.addListener('keyboardWillShow', handleShow).then((h) => {
+      cleanup.push(() => h.remove())
+    }).catch(() => {})
+    Keyboard.addListener('keyboardDidShow', handleShow).then((h) => {
+      cleanup.push(() => h.remove())
+    }).catch(() => {})
+    Keyboard.addListener('keyboardWillHide', handleHide).then((h) => {
+      cleanup.push(() => h.remove())
+    }).catch(() => {})
+    Keyboard.addListener('keyboardDidHide', handleHide).then((h) => {
+      cleanup.push(() => h.remove())
+    }).catch(() => {})
+
+    return () => {
+      cleanup.forEach((fn) => fn())
+    }
   }, [])
 
   const handleSend = () => {
@@ -77,6 +107,7 @@ export default function FeedbackButton() {
           {/* Modal Sheet */}
           <div
             className="absolute inset-x-0 bottom-0 animate-slide-up overflow-hidden rounded-t-2xl bg-card shadow-2xl dark:bg-card"
+            style={{ bottom: keyboardHeight > 0 ? `${keyboardHeight}px` : '0px' }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Handle Bar */}
@@ -133,6 +164,9 @@ export default function FeedbackButton() {
                   id="feedback-message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
+                  onFocus={(e) => {
+                    e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  }}
                   placeholder="What would make Tip Tracker better? Found a bug? Have a feature idea?"
                   className="min-h-[120px] w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-background/50"
                   maxLength={1000}

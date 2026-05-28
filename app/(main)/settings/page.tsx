@@ -192,7 +192,7 @@ export default function SettingsPage() {
   };
 
   const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Tip Tracker';
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '';
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'jscampbell21@outlook.com';
   const version = '1.0.0';
 
   return (

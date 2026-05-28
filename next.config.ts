@@ -1,16 +1,11 @@
 import type { NextConfig } from 'next';
 
-const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL;
-if (!supportEmail) {
-  console.warn(
-    '[tip_tracker] NEXT_PUBLIC_SUPPORT_EMAIL is not set — support features will be disabled',
-  );
-}
+const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? 'jscampbell21@outlook.com';
 
 const nextConfig: NextConfig = {
   output: 'export',
   env: {
-    NEXT_PUBLIC_SUPPORT_EMAIL: supportEmail ?? '',
+    NEXT_PUBLIC_SUPPORT_EMAIL: supportEmail,
   },
 };
 

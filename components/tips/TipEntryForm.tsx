@@ -47,6 +47,7 @@ export default function TipEntryForm({
 
   const [date, setDate] = useState(initialData?.date ?? getTodayString());
   const [amount, setAmount] = useState(initialData?.amount?.toString() ?? "");
+  const [name, setName] = useState(initialData?.name ?? "");
   const [tourType, setTourType] = useState<TourType>(
     initialData?.tourType ?? getStoredDefault<TourType>(STORAGE_KEY_LAST_TOUR, "Private")
   );
@@ -115,11 +116,14 @@ export default function TipEntryForm({
       paymentMethod,
       location,
     };
+    if (name.trim()) {
+      data.name = name.trim();
+    }
     if (notes.trim()) {
       data.notes = notes.trim();
     }
     return data;
-  }, [date, amount, tourType, guestCount, rating, paymentMethod, location, notes]);
+  }, [date, amount, tourType, guestCount, rating, paymentMethod, location, notes, name]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,6 +149,7 @@ export default function TipEntryForm({
 
     try {
       await onSubmit(result.data);
+      setName("");
     } catch {
       setGeneralError("Failed to save tip. Please try again.");
     } finally {
@@ -166,6 +171,7 @@ export default function TipEntryForm({
       rating: null,
       paymentMethod: null,
       notes: null,
+      name: name.trim() || null,
     };
     const result = TipEntryFormSchema.safeParse(formData);
 
@@ -178,6 +184,7 @@ export default function TipEntryForm({
 
     try {
       await onSubmit(result.data);
+      setName("");
     } catch {
       setGeneralError("Failed to save tip. Please try again.");
     } finally {
@@ -218,6 +225,20 @@ export default function TipEntryForm({
             {fieldErrors.amount && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.amount}</p>
             )}
+          </div>
+
+          {/* Guest Name - text input */}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Guest Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Guest name (optional)"
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-lg text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
           </div>
 
           {/* Tour Type - pill buttons */}
@@ -346,6 +367,21 @@ export default function TipEntryForm({
             {fieldErrors.amount && (
               <p className="mt-1 text-sm text-red-600">{fieldErrors.amount}</p>
             )}
+          </div>
+
+          {/* Guest Name */}
+          <div>
+            <label htmlFor="name" className="mb-1 block text-sm font-medium text-gray-700">
+              Guest Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Guest name (optional)"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
           </div>
 
           {/* Tour Type */}

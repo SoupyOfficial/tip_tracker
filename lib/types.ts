@@ -12,6 +12,7 @@ export interface TipEntry {
   guestCount: number | null;
   rating: Rating;
   notes?: string;
+  name?: string;
   currency: Currency;
   paymentMethod: PaymentMethod;
   location: Location;

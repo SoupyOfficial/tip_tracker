@@ -40,11 +40,8 @@ export default function AppShell({ children }: AppShellProps) {
   }, [isAddPage])
 
   const handleHeaderAction = () => {
-    if (!isAddPage) return
-
-    const nextMode = addMode === 'quick' ? 'full' : 'quick'
-    setAddMode(nextMode)
-    router.replace(`/add?mode=${nextMode}`)
+    const newMode = addMode === 'quick' ? 'full' : 'quick'
+    router.push(`/add?mode=${newMode}`)
   }
 
   const navItems = [
@@ -60,17 +57,15 @@ export default function AppShell({ children }: AppShellProps) {
       <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur supports-backdrop-filter:bg-card/60 pt-[env(safe-area-inset-top)]">
         <div className="flex h-14 items-center justify-between px-4">
           <h2 className="text-lg font-semibold text-card-foreground">Tip Tracker</h2>
-          {isAddPage ? (
+          {isAddPage && (
             <button
               type="button"
               onClick={handleHeaderAction}
               className="flex h-11 min-h-11 items-center rounded-full border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-              aria-label={addMode === 'quick' ? 'Switch to full form' : 'Switch to quick add'}
+              aria-label={`Switch to ${addMode === 'quick' ? 'full' : 'quick'} form`}
             >
               {addMode === 'quick' ? 'Full Form' : 'Quick Add'}
             </button>
-          ) : (
-            <div className="h-11 w-11" />
           )}
         </div>
       </header>

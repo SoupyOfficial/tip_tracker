@@ -39,6 +39,11 @@ export const TipEntryFormSchema = z.object({
     .max(500, { error: "Notes cannot exceed 500 characters" })
     .optional(),
 
+  name: z
+    .string()
+    .max(100, { error: "Name cannot exceed 100 characters" })
+    .optional(),
+
   currency: z.literal("USD").default("USD"),
 
   paymentMethod: z.enum(paymentMethods, {

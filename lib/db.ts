@@ -18,6 +18,10 @@ db.version(2).stores({
   });
 });
 
+db.version(3).stores({
+  tips: '++id, date, tourType, paymentMethod, rating, location',
+});
+
 export { db };
 
 export async function addTip(entry: Omit<TipEntry, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
