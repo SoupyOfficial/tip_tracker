@@ -111,8 +111,8 @@ export default function TipEntryForm({
       date,
       amount: parseFloat(amount),
       tourType,
-      guestCount: parseInt(guestCount, 10),
-      rating: parseInt(rating, 10),
+      guestCount: guestCount ? parseInt(guestCount, 10) : null,
+      rating: rating ? parseInt(rating, 10) : null,
       paymentMethod,
       location,
     };
@@ -168,6 +168,8 @@ export default function TipEntryForm({
       tourType,
       location,
       paymentMethod,
+      rating: null,
+      guestCount: null,
     };
     if (name.trim()) {
       formData.name = name.trim();
