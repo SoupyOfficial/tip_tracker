@@ -51,8 +51,8 @@ export default function TipEntryForm({
   const [tourType, setTourType] = useState<TourType>(
     initialData?.tourType ?? getStoredDefault<TourType>(STORAGE_KEY_LAST_TOUR, "Private")
   );
-  const [guestCount, setGuestCount] = useState(initialData?.guestCount?.toString() ?? "1");
-  const [rating, setRating] = useState(initialData?.rating?.toString() ?? "4");
+  const [guestCount, setGuestCount] = useState("1");
+  const [rating, setRating] = useState("4");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
     initialData?.paymentMethod ?? "Cash"
